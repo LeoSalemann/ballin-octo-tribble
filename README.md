@@ -14,3 +14,5 @@ A second off-network commit. Will it show up as a single-line diff?
 Now I'm going to get back online and push, then commit.
 
 Back offline again.  The prevous three lines were done with TortoiseGIT, now we'll try purple kitty-cat.
+
+Still offline, trying for two commits, which will bump the Sync up to 2; then one big push.

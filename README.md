@@ -12,3 +12,5 @@ Here's a change I made when I was totally cut off from all networks. I only did 
 A second off-network commit. Will it show up as a single-line diff?
 
 Now I'm going to get back online and push, then commit.
+
+Back offline again.  The prevous three lines were done with TortoiseGIT, now we'll try purple kitty-cat.

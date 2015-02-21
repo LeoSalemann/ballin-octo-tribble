@@ -9,3 +9,5 @@ Here is a line I added from IE10 Win7_1, pushing to its (local) shared nework dr
 
 Here's a change I made when I was totally cut off from all networks. I only did a push, not a commit.
 
+A second off-network commit. Will it show up as a single-line diff?
+

@@ -7,5 +7,5 @@ Here is a line I added from the IE10 - Win7_1 Clone, pushing to a shared network
 
 Here is a line I added from IE10 Win7_1, pushing to its (local) shared nework drive.
 
-
+Here's a change I made when I was totally cut off from all networks. I only did a push, not a commit.
 

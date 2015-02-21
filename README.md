@@ -7,7 +7,8 @@ Here is a line I added from the IE10 - Win7_1 Clone, pushing to a shared network
 
 Here is a line I added from IE10 Win7_1, pushing to its (local) shared nework drive.
 
-Here's a change I made when I was totally cut off from all networks. I only did a push, not a commit.
+Here's a change I made when I was totally cut off from all networks. I only did a commit, not a push.
 
 A second off-network commit. Will it show up as a single-line diff?
 
+Now I'm going to get back online and push, then commit.

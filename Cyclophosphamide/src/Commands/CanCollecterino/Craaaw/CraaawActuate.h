@@ -4,6 +4,10 @@
 #include "../../../CommandBase.h"
 #include "WPILib.h"
 
+/*!
+ * Checks if the craaaw is unactuated and actuates it
+ */
+
 class CraaawActuate: public CommandBase {
 public:
 	enum State {

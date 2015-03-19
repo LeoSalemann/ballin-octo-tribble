@@ -4,9 +4,15 @@
 #include "Commands/Subsystem.h"
 #include "WPILib.h"
 
-class NewToteIntakerino: public Subsystem{
-private:
-	CANTalon *toteIntakeMotorLeft, *toteIntakeMotorRight;
+class ToteIntakerino: public Subsystem, public PIDOutput, public PIDSource {
+
+	CANTalon *toteIntakeMotor;
+
+	Encoder *encoder;
+	PIDController *pid;
+
+	bool hasTote;
+	bool isWindingDown;
 public:
 
 	NewToteIntakerino();

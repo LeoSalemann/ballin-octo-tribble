@@ -1,9 +1,7 @@
 #include <Commands/CanCollecterino/Arms/Induct.h>
 
-Induct::Induct(State state) {
-	Requires(canIntakerino);
-	this->state = state;
-	SetTimeout(5.0);
+Induct::Induct() {
+	kek = 0;
 }
 
 Induct::Induct(State state, double timeout) {

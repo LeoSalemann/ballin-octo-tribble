@@ -3,14 +3,14 @@
 // Initialize a single static instance of all of your subsystems to NULL
 DriveBae* CommandBase::driveBae = NULL;
 OI* CommandBase::oi = NULL;
-CanCollecterino* CommandBase::canCollecterino = NULL;
-CanWristerino* CommandBase::canWristerino = NULL;
-CanIntakerino* CommandBase::canIntakerino = NULL;
-OldToteIntakerino* CommandBase::oldToteIntakerino = NULL;
-NewToteIntakerino* CommandBase::newToteIntakerino = NULL;
+ArmLifter* CommandBase::armLifter = NULL;
+ArmWristerino* CommandBase::armWristerino = NULL;
+ArmIntakerino* CommandBase::armIntakerino = NULL;
+ToteIntakerino* CommandBase::toteIntakerino = NULL;
 ToteLifterino* CommandBase::toteLifterino = NULL;
 Craaaw* CommandBase::craaaw = NULL;
 Pneumatics* CommandBase::pneumatics = NULL;
+AutoCanGrabber* CommandBase::autoCanGrabber = NULL;
 
 CommandBase::CommandBase(char const *name) :
 		Command(name) {
@@ -23,11 +23,10 @@ CommandBase::CommandBase() :
 
 CommandBase::~CommandBase() {
 	delete driveBae;
-	delete canCollecterino;
-	delete canWristerino;
-	delete canIntakerino;
-	delete oldToteIntakerino;
-	delete newToteIntakerino;
+	delete armLifter;
+	delete armWristerino;
+	delete armIntakerino;
+	delete toteIntakerino;
 	delete toteLifterino;
 	delete oi;
 	delete craaaw;
@@ -36,11 +35,10 @@ CommandBase::~CommandBase() {
 
 void CommandBase::init() {
 	driveBae = new DriveBae();
-	canCollecterino = new CanCollecterino();
-	canWristerino = new CanWristerino();
-	canIntakerino = new CanIntakerino();
-	//newToteIntakerino = new NewToteIntakerino();
-	oldToteIntakerino = new OldToteIntakerino();
+	armLifter = new ArmLifter();
+	armWristerino = new ArmWristerino();
+	armIntakerino = new ArmIntakerino();
+	toteIntakerino = new ToteIntakerino();
 	toteLifterino = new ToteLifterino();
 	oi = new OI();
 	craaaw = new Craaaw();

@@ -1,15 +1,16 @@
 #include <Buttons/JoystickButton.h>
+#include <Commands/Armerino/Arms/Induct.h>
+#include <Commands/Armerino/Arms/MoveArms.h>
+#include <Commands/Armerino/Arms/MoveWrist.h>
+#include <Commands/Armerino/Arms/Whack.h>
+#include <Commands/Armerino/CanToCraaawTransfer.h>
+#include <Commands/Armerino/CollectCan.h>
+#include <Commands/Armerino/Craaaw/CraaawActuate.h>
+#include <Commands/Armerino/IndexTote.h>
+#include <Commands/Armerino/MoveArmsFancy.h>
 #include <Commands/Automatic/TurnToThenDrive.h>
-#include <Commands/CanCollecterino/Arms/Induct.h>
-#include <Commands/CanCollecterino/Arms/MoveArms.h>
-#include <Commands/CanCollecterino/Arms/MoveWrist.h>
-#include <Commands/CanCollecterino/Arms/Whack.h>
-#include <Commands/CanCollecterino/CanToCraaawTransfer.h>
-#include <Commands/CanCollecterino/Collect.h>
-#include <Commands/CanCollecterino/Craaaw/CraaawActuate.h>
-#include <Commands/CanCollecterino/MoveArmsFancy.h>
 #include <Commands/Score.h>
-#include <Commands/ToteIntake/OldToteIntake.h>
+#include <Commands/ToteIntake/ToteIntake.h>
 #include <Commands/ToteLifting/LiftToHeight.h>
 #include <Commands/ToteLifting/LiftToHeightVelocity.h>
 #include <Commands/ToteLifting/SafeLiftToHeight.h>
@@ -63,6 +64,12 @@ OI::OI() {
 	leftLoadButton = new JoystickButton(joystickRight, 5);
 	rightLoadButton = new JoystickButton(joystickRight, 6);
 	moveArmsWhackMode = new JoystickButton(joystickLeft, 1);
+	toteLifterUpDriver = new JoystickButton(joystickLeft, 4);
+	toteLifterDownDriver = new JoystickButton(joystickLeft, 5);
+	toteIndex = new JoystickButton(joystickLeft, 2);
+	toteIndexFwd = new JoystickButton(joystickLeft, 5);
+	toteIndexRv = new JoystickButton(joystickLeft, 6);
+	wristToggleDriver = new JoystickButton(joystickRight, 1);
 }
 
 OI::~OI() {
@@ -87,6 +94,12 @@ OI::~OI() {
 	delete zeroLifter;
 	delete canArmOverrideUp;
 	delete canArmOverrideDown;
+	delete toteLifterUpDriver;
+	delete toteLifterDownDriver;
+	delete toteIndex;
+	delete toteIndexFwd;
+	delete toteIndexRv;
+	delete wristToggleDriver;
 }
 
 Joystick *OI::getJoystickOperator() {
@@ -124,9 +137,15 @@ void OI::registerButtonListeners() {
 
 	// Loading/stacking
 	SAFE_BUTTON(alignToteFwd,
+<<<<<<< HEAD
 			alignToteFwd->WhileHeld(new OldToteIntake(TOTE_INTAKE_MOTOR_FULL)));
 	SAFE_BUTTON(alignToteRvs,
 			alignToteRvs->WhileHeld(new OldToteIntake(-TOTE_INTAKE_MOTOR_FULL)));
+=======
+			alignToteFwd->WhileHeld(new ToteIntake(TOTE_INTAKE_MOTOR_FULL)));
+	SAFE_BUTTON(alignToteRvs,
+			alignToteRvs->WhileHeld(new ToteIntake(-TOTE_INTAKE_MOTOR_FULL)));
+>>>>>>> master
 	createButton("lifter load", loadPos,
 			new SafeLiftToHeight(TOTE_LIFTER_LOAD_HEIGHT));
 	createButton("lifter floor", floorPos,
@@ -158,6 +177,20 @@ void OI::registerButtonListeners() {
 	SAFE_BUTTON(rightLoadButton,
 			rightLoadButton->WhenPressed(new TurnToThenDrive(LOAD_RIGHT_ANGLE)));
 	createButton("whack mode", moveArmsWhackMode, new Whack());
+	SAFE_BUTTON(toteLifterUpDriver,
+			toteLifterUpDriver->WhenPressed(new LiftToHeightVelocity(.5)));
+	SAFE_BUTTON(toteLifterUpDriver,
+			toteLifterUpDriver->WhenReleased(new LiftToHeightVelocity(0)));
+	SAFE_BUTTON(toteLifterDownDriver,
+			toteLifterDownDriver->WhenPressed(new LiftToHeightVelocity(-.5)));
+	SAFE_BUTTON(toteLifterDownDriver,
+			toteLifterDownDriver->WhenReleased(new LiftToHeightVelocity(0)));
+	createButton("index tote", toteIndex, new IndexTote());
+	SAFE_BUTTON(toteIndexFwd, toteIndexFwd->WhenPressed(new Induct(Induct::forward, Induct::tote)));
+	SAFE_BUTTON(toteIndexFwd, toteIndexFwd->WhenPressed(new Induct(Induct::stopped)));
+	SAFE_BUTTON(toteIndexRv, toteIndexRv->WhenPressed(new Induct(Induct::reverse, Induct::tote)));
+	SAFE_BUTTON(toteIndexRv, toteIndexRv->WhenReleased(new Induct(Induct::stopped)));
+	createButton("hold tote", wristToggleDriver, new MoveWrist(MoveWrist::toggle));
 }
 
 void OI::createButton(std::string key, Button *b, Command *c) {

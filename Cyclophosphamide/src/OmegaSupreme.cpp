@@ -21,7 +21,11 @@
 #include <stdio.h>
 #include <SmartDashboard/SendableChooser.h>
 #include <SmartDashboard/SmartDashboard.h>
+<<<<<<< HEAD
 #include <Subsystems/CanCollecterino.h>
+=======
+#include <Subsystems/ArmLifter.h>
+>>>>>>> master
 #include <Subsystems/DriveBae.h>
 #include <Subsystems/ToteLifterino.h>
 #include <Timer.h>
@@ -31,6 +35,10 @@ OmegaSupreme::OmegaSupreme() {
 	PIDChange = 0;
 	lw = NULL;
 	autonomousCommand = NULL;
+<<<<<<< HEAD
+=======
+	chooser = NULL;
+>>>>>>> master
 	shouldRun = true;
 }
 
@@ -49,18 +57,19 @@ void OmegaSupreme::RobotInit() {
 	// Create autonomous
 
 	chooser = new SendableChooser();
-	chooser->AddDefault("Start with can", Autonomous::createStartWithCan());
+	chooser->AddDefault("Can Then Zone", Autonomous::createStartWithCanThenDrive());
+	chooser->AddObject("Just Get Can", Autonomous::createStartWithCan());
 	chooser->AddObject("Blank", new Autonomous());
 	chooser->AddObject("Drive forward", Autonomous::createSimpleDriveForward());
-	/*chooser->AddObject("Drive forward 24 inches",
-	 Autonomous::createDriveDistance(24, BestDrive::forward));
-	 chooser->AddObject("Drive forward 1 second",
-	 Autonomous::createDriveDuration(1.0f, -90.0f));
-	 chooser->AddObject("Turn 90 degrees", Autonomous::createTurnTo(90.0));*/
 	SmartDashboard::PutData("Auto Modes", chooser);
 
+<<<<<<< HEAD
 	chooser = Scripting::generateAutonomousModes(AUTO_SCRIPT_LOCATIONS);
 	SmartDashboard::PutData("Auto Modes", chooser);
+=======
+	out.open("autolog", std::ios::out);
+	out << "~~~~~~~STAAARTING LOG~~~~~~~" << std::endl;
+>>>>>>> master
 =======
 	out.open("autolog", std::ios::out);
 	out << "~~~~~~~STAAARTING LOG~~~~~~~" << std::endl;
@@ -93,6 +102,10 @@ void OmegaSupreme::AutonomousInit() {
 	Scheduler::GetInstance()->RemoveAll();
 	SmartDashboard::PutString("auto", "insideAutoInit!");
 	CommandBase::toteLifterino->getEncoder()->Reset();
+<<<<<<< HEAD
+=======
+	autonomousCommand = (Command *) chooser->GetSelected();
+>>>>>>> master
 	autonomousCommand->Start();
 	out << "Autonomous init ran" << std::endl;
 	out.flush();
@@ -107,6 +120,10 @@ void OmegaSupreme::AutonomousInit() {
 void OmegaSupreme::AutonomousPeriodic() {
 	Scheduler::GetInstance()->Run();
 	if (!autonomousCommand->IsRunning() && shouldRun) {
+<<<<<<< HEAD
+=======
+		autonomousCommand = (Command *) chooser->GetSelected();
+>>>>>>> master
 		autonomousCommand->Start();
 		out << "Did the should run" << std::endl;
 		out.flush();
@@ -145,13 +162,13 @@ void OmegaSupreme::TeleopPeriodic() {
 			CommandBase::toteLifterino->getRightMotor()->GetOutputCurrent());
 
 	SmartDashboard::PutNumber("armPot",
-			CommandBase::canCollecterino->getLiftPot()->PIDGet());
+			CommandBase::armLifter->getLiftPot()->PIDGet());
 
 	SmartDashboard::PutBoolean("Digital input1", input1->Get());
 	SmartDashboard::PutBoolean("Digital input2", input2->Get());
 
 	SmartDashboard::PutNumber("Can arm pot",
-			CommandBase::canCollecterino->getLiftPot()->GetValue());
+			CommandBase::armLifter->getLiftPot()->GetValue());
 
 	SmartDashboard::PutNumber("elevatorEnc",
 			CommandBase::toteLifterino->getEncoder()->PIDGet());

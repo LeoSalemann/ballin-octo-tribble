@@ -1,0 +1,13 @@
+#Binary files
+*.o
+*.build
+*FRCUserProgram
+
+#Project files
+*.settings
+*.project
+*.cproject
+build.properties
+build.xml
+/Debug/
+sysProps.xml

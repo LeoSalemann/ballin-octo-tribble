@@ -137,15 +137,9 @@ void OI::registerButtonListeners() {
 
 	// Loading/stacking
 	SAFE_BUTTON(alignToteFwd,
-<<<<<<< HEAD
-			alignToteFwd->WhileHeld(new OldToteIntake(TOTE_INTAKE_MOTOR_FULL)));
-	SAFE_BUTTON(alignToteRvs,
-			alignToteRvs->WhileHeld(new OldToteIntake(-TOTE_INTAKE_MOTOR_FULL)));
-=======
 			alignToteFwd->WhileHeld(new ToteIntake(TOTE_INTAKE_MOTOR_FULL)));
 	SAFE_BUTTON(alignToteRvs,
 			alignToteRvs->WhileHeld(new ToteIntake(-TOTE_INTAKE_MOTOR_FULL)));
->>>>>>> master
 	createButton("lifter load", loadPos,
 			new SafeLiftToHeight(TOTE_LIFTER_LOAD_HEIGHT));
 	createButton("lifter floor", floorPos,

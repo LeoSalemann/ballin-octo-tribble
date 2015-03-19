@@ -1,13 +1,23 @@
 #include <Commands/ToteIntake/OldToteIntake.h>
 
-OldToteIntake::OldToteIntake(float speed) {
+OldToteIntake::OldToteIntake(Direction direction) {
 	Requires(oldToteIntakerino);
-	this->speed = speed;
+	this->direction = direction;
 }
 
 // Called just before this Command runs the first time
 void OldToteIntake::Initialize() {
-	oldToteIntakerino->setMotor(speed);
+	switch (direction) {
+	case forward:
+		oldToteIntakerino->setMotor(TOTE_INTAKE_MOTOR_FULL);
+		break;
+	case reverse:
+		oldToteIntakerino->setMotor(-TOTE_INTAKE_MOTOR_FULL);
+		break;
+	case stopped:
+		oldToteIntakerino->hold();
+		break;
+	}
 }
 
 // Called repeatedly when this Command is scheduled to run

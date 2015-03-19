@@ -6,13 +6,9 @@
 #include "RobotMap.h"
 #include "GyroDriver/IMU.h"
 /**
-<<<<<<< HEAD
- * The DriveBae drives with  field centric.
-=======
  * The DriveBase consists of four independent talonSRX motorcontrollers.
  * This driveBae class is designed for a 4 mechanum wheel drivebase for any degree movement.
  * Using the FIELD_ORIENTED define, it also has field oriented support, currently not used.
->>>>>>> master
  */
 class DriveBae: public Subsystem, public PIDOutput, public PIDSource {
 private:

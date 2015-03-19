@@ -1,10 +1,6 @@
-#include <CANTalon.h>
-#include <Commands/ToteIntake/OldToteIntake.h>
-#include <Encoder.h>
-#include <PIDController.h>
-#include <RobotMap.h>
 #include <Subsystems/OldToteIntakerino.h>
-#include <chrono>
+#include "../Commands/ToteIntake/OldToteIntake.h"
+#include "../RobotMap.h"
 #include <cmath>
 
 OldToteIntakerino::OldToteIntakerino() :
@@ -15,14 +11,15 @@ OldToteIntakerino::OldToteIntakerino() :
 	pid = new PIDController(TOTE_INTAKE_P, TOTE_INTAKE_I, TOTE_INTAKE_D,
 			encoder, this);
 	pid->SetOutputRange(-TOTE_INTAKE_PID_FULL, TOTE_INTAKE_PID_FULL);
-	//pid->Enable();
+	pid->Enable();
 	hasTote = false;
 	isWindingDown = false;
 	startAutoTime = getTime();
+	hold();
 }
 
 void OldToteIntakerino::InitDefaultCommand() {
-	SetDefaultCommand(new OldToteIntake(TOTE_INTAKE_MOTOR_SLOW));
+	//SetDefaultCommand(new ToteIntake(ToteIntake::stopped));
 }
 
 void OldToteIntakerino::PIDWrite(float output) {

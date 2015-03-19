@@ -21,11 +21,7 @@
 #include <stdio.h>
 #include <SmartDashboard/SendableChooser.h>
 #include <SmartDashboard/SmartDashboard.h>
-<<<<<<< HEAD
-#include <Subsystems/CanCollecterino.h>
-=======
 #include <Subsystems/ArmLifter.h>
->>>>>>> master
 #include <Subsystems/DriveBae.h>
 #include <Subsystems/ToteLifterino.h>
 #include <Timer.h>
@@ -35,15 +31,13 @@ OmegaSupreme::OmegaSupreme() {
 	PIDChange = 0;
 	lw = NULL;
 	autonomousCommand = NULL;
-<<<<<<< HEAD
-=======
 	chooser = NULL;
->>>>>>> master
 	shouldRun = true;
 }
 
 OmegaSupreme::~OmegaSupreme() {
 	delete autonomousCommand;
+	delete chooser;
 }
 
 void OmegaSupreme::RobotInit() {
@@ -53,9 +47,7 @@ void OmegaSupreme::RobotInit() {
 	input1 = new DigitalInput(1);
 	input2 = new DigitalInput(2);
 
-<<<<<<< HEAD
 	// Create autonomous
-
 	chooser = new SendableChooser();
 	chooser->AddDefault("Can Then Zone", Autonomous::createStartWithCanThenDrive());
 	chooser->AddObject("Just Get Can", Autonomous::createStartWithCan());
@@ -63,17 +55,8 @@ void OmegaSupreme::RobotInit() {
 	chooser->AddObject("Drive forward", Autonomous::createSimpleDriveForward());
 	SmartDashboard::PutData("Auto Modes", chooser);
 
-<<<<<<< HEAD
-	chooser = Scripting::generateAutonomousModes(AUTO_SCRIPT_LOCATIONS);
-	SmartDashboard::PutData("Auto Modes", chooser);
-=======
 	out.open("autolog", std::ios::out);
 	out << "~~~~~~~STAAARTING LOG~~~~~~~" << std::endl;
->>>>>>> master
-=======
-	out.open("autolog", std::ios::out);
-	out << "~~~~~~~STAAARTING LOG~~~~~~~" << std::endl;
->>>>>>> master
 
 	CommandBase::oi->registerButtonListeners();
 
@@ -102,10 +85,7 @@ void OmegaSupreme::AutonomousInit() {
 	Scheduler::GetInstance()->RemoveAll();
 	SmartDashboard::PutString("auto", "insideAutoInit!");
 	CommandBase::toteLifterino->getEncoder()->Reset();
-<<<<<<< HEAD
-=======
 	autonomousCommand = (Command *) chooser->GetSelected();
->>>>>>> master
 	autonomousCommand->Start();
 	out << "Autonomous init ran" << std::endl;
 	out.flush();
@@ -120,10 +100,7 @@ void OmegaSupreme::AutonomousInit() {
 void OmegaSupreme::AutonomousPeriodic() {
 	Scheduler::GetInstance()->Run();
 	if (!autonomousCommand->IsRunning() && shouldRun) {
-<<<<<<< HEAD
-=======
 		autonomousCommand = (Command *) chooser->GetSelected();
->>>>>>> master
 		autonomousCommand->Start();
 		out << "Did the should run" << std::endl;
 		out.flush();

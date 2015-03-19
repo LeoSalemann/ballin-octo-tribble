@@ -8,25 +8,20 @@
 #include <AnalogInput.h>
 #include <CANTalon.h>
 #include <Commands/Autonomous/Autonomous.h>
-#include <Commands/CanCollecterino/MoveArmsFancy.h>
 #include <Commands/Drivebase/ZeroGyro.h>
 #include <Commands/Scheduler.h>
-#include <Commands/ToteIntake/OldToteIntake.h>
-#include <Commands/ToteLifting/DownUp.h>
-#include <Commands/ToteLifting/zeroing/ResetElevatorEncoder.h>
 #include <DigitalInput.h>
 #include <Encoder.h>
 #include <GyroDriver/IMU.h>
+#include <Joystick.h>
 #include <LiveWindow/LiveWindow.h>
 #include <OI.h>
 #include <OmegaSupreme.h>
 #include <RobotBase.h>
-#include <RobotMap.h>
 #include <stdio.h>
 #include <SmartDashboard/SendableChooser.h>
 #include <SmartDashboard/SmartDashboard.h>
-#include <Subsystems/CanCollecterino.h>
-#include <Subsystems/Craaaw.h>
+#include <Subsystems/ArmLifter.h>
 #include <Subsystems/DriveBae.h>
 #include <Subsystems/ToteLifterino.h>
 #include <Timer.h>
@@ -35,10 +30,9 @@
 OmegaSupreme::OmegaSupreme() {
 	PIDChange = 0;
 	lw = NULL;
-	chooser = NULL;
 	autonomousCommand = NULL;
-//	VisionRunner *vision = new VisionRunner(320, 480);
-//	vision->ThreadStart();
+	chooser = NULL;
+	shouldRun = true;
 }
 
 OmegaSupreme::~OmegaSupreme() {
@@ -55,21 +49,18 @@ void OmegaSupreme::RobotInit() {
 
 	// Create autonomous
 	chooser = new SendableChooser();
-	chooser->AddDefault("Start with can", Autonomous::createStartWithCan());
+	chooser->AddDefault("Can Then Zone", Autonomous::createStartWithCanThenDrive());
+	chooser->AddObject("Just Get Can", Autonomous::createStartWithCan());
 	chooser->AddObject("Blank", new Autonomous());
 	chooser->AddObject("Drive forward", Autonomous::createSimpleDriveForward());
-	/*chooser->AddObject("Drive forward 24 inches",
-	 Autonomous::createDriveDistance(24, BestDrive::forward));
-	 chooser->AddObject("Drive forward 1 second",
-	 Autonomous::createDriveDuration(1.0f, -90.0f));
-	 chooser->AddObject("Turn 90 degrees", Autonomous::createTurnTo(90.0));*/
 	SmartDashboard::PutData("Auto Modes", chooser);
 
-	//chooser = Scripting::generateAutonomousModes(AUTO_SCRIPT_LOCATIONS);
+	out.open("autolog", std::ios::out);
+	out << "~~~~~~~STAAARTING LOG~~~~~~~" << std::endl;
 
 	CommandBase::oi->registerButtonListeners();
 
-	if (CommandBase::driveBae != NULL && FIELD_ORIENTED) {
+	if (CommandBase::driveBae != NULL) {
 		SmartDashboard::PutData("Zero yaw", new ZeroGyro);
 		bool zeroed = false;
 		double initialTime = GetFPGATime();
@@ -87,25 +78,44 @@ void OmegaSupreme::RobotInit() {
 	}
 	SmartDashboard::PutString("auto", "end of RobotInit!");
 	autonomousCommand = Autonomous::createStartWithCan();
+	out << "initialized auto" << std::endl;
 }
 
 void OmegaSupreme::AutonomousInit() {
 	Scheduler::GetInstance()->RemoveAll();
-	//((ScriptRunner*) chooser->GetSelected())->startCommand();
-
-	//autonomousCommand = (Command *) chooser->GetSelected();
-	//autonomousCommand = new SimpleDriveForward(24);
 	SmartDashboard::PutString("auto", "insideAutoInit!");
 	CommandBase::toteLifterino->getEncoder()->Reset();
-	autonomousCommand = Autonomous::createStartWithCan();
+	autonomousCommand = (Command *) chooser->GetSelected();
 	autonomousCommand->Start();
+	out << "Autonomous init ran" << std::endl;
+	out.flush();
+	running = autonomousCommand->IsRunning();
+	if (running) {
+		out << "~FIRST~ Running! ~FIRST~" << std::endl;
+	} else {
+		out << "~FIRST~ Not Running ~FIRST~" << std::endl;
+	}
 }
 
 void OmegaSupreme::AutonomousPeriodic() {
 	Scheduler::GetInstance()->Run();
-	/*if (!autonomousCommand->IsRunning()) {
+	if (!autonomousCommand->IsRunning() && shouldRun) {
+		autonomousCommand = (Command *) chooser->GetSelected();
 		autonomousCommand->Start();
-	}*/
+		out << "Did the should run" << std::endl;
+		out.flush();
+		shouldRun = false;
+	}
+
+	if (!autonomousCommand->IsRunning() && running) {
+		out << "Not Running" << std::endl;
+		out.flush();
+		running = false;
+	} else if (autonomousCommand->IsRunning() && !running) {
+		out << "Running!" << std::endl;
+		out.flush();
+		running = true;
+	}
 	WatchDogg();
 }
 
@@ -129,13 +139,13 @@ void OmegaSupreme::TeleopPeriodic() {
 			CommandBase::toteLifterino->getRightMotor()->GetOutputCurrent());
 
 	SmartDashboard::PutNumber("armPot",
-			CommandBase::canCollecterino->getLiftPot()->PIDGet());
+			CommandBase::armLifter->getLiftPot()->PIDGet());
 
 	SmartDashboard::PutBoolean("Digital input1", input1->Get());
 	SmartDashboard::PutBoolean("Digital input2", input2->Get());
 
 	SmartDashboard::PutNumber("Can arm pot",
-			CommandBase::canCollecterino->getLiftPot()->GetValue());
+			CommandBase::armLifter->getLiftPot()->GetValue());
 
 	SmartDashboard::PutNumber("elevatorEnc",
 			CommandBase::toteLifterino->getEncoder()->PIDGet());
